@@ -8,7 +8,9 @@
 - [STEP2](#step-2)
     - [고민했던 점](#고민했던-점)
     - [학습 키워드](#학습-키워드)
-
+- [STEP3](#step-3)
+    - [고민했던 점](#고민했던-점)
+    - [학습 키워드](#학습-키워드)
 ---
 
 ## 구현
@@ -159,3 +161,55 @@ NSCache를 활용하여 URL으로 부터 받아오는 이미지 데이터를 캐
 - Segmented Control
 - AutoLayout
 - NSMutableAttributedString
+
+## Step 3
+
+## 고민했던 점 
+
+### 1. 상품 등록/수정 `ViewController`의 공통 기능 구현 
+
+컨테이너 뷰의 레이아웃을 잡는다거나, alert를 띄우는 등 등록/수정 ViewController에서 공통적으로 필요로하는 기능들을 프로토콜 기본구현으로 제공해봤습니다. 다만 Objective-C 메서드들은 프로토콜 기본 구현이 불가하다는 점에 한계를 직접 경험해본 것 같습니다. 이에 상속과 프로토콜 기본 구현 관련하여 고민을 해봤습니다.
+
+- 상속
+    - 다중 상속이 불가능하다
+- 프로토콜 기본 구현 
+    - Objective-C 프로토콜은 기본 구현이 불가능하다.
+
+### 2. `UIImage` 이미지 크기 조정 
+
+UIGraphics를 사용하여 이미지 크기를 조절해주었습니다. `UIGraphicsBeginImageContextWithOptions()` 메서드를 호출하여 비트맵을 만들고 `UIImage.draw(in:)`로 원하는 사이즈만큼 줄인 뒤, `UIGraphicsGetImageFromCurrentImageContext()` 메서드를 통해 크기가 조정된 이미지를 얻었습니다. 이후 `UIGraphicsEndImageContext()`를 호출하여 비트맵을 제거 처리해주면서 이미지 크기를 조정하는 로직을 구현했습니다. 
+
+### 3. 키보드 사용에 따른 ScrollView inset 조정
+
+textField나 textView에 텍스트 작성시 화면이 작은 iPod Touch의 경우 키보드가 이벤트 발생 뷰를 가려버리는 문제가 있어 키보드가 올라옴에 따라 스크롤 뷰의 `contentInset.bottom`을 키보드의 높이만큼 지정하여 키보드가 텍스트필드나, 텍스트뷰를 가릴 일이 없도록 구현하였습니다.
+
+### 4. View와 ViewController 분리 
+
+뷰와 뷰컨트롤러의 책임을 덜기위해 둘 사이에 `ProductRegisterManager`라는 객체를 생성하였습니다.
+
+매니저는 뷰를 알고있어 뷰의 특정 속성값을 알 수 있고, 뷰컨트롤러는 매니저를 알고있기에 매니저가 구한 뷰의 속성값을 받기만 하면 되게끔 하여 뷰컨트롤러의 책임을 덜어주었습니다.
+
+
+### 5. 이미지 추가/삭제 
+
+이미지의 경우 5개까지 추가 가능하기에, 추가된 이미지가 5개가 되면 추가 버튼을 `isHidden = true`하여 숨겨주었습니다. 이 부분은 숨김 처리하는 것 보다, 추후에 alert를 주어 최대 등록 개수를 알려주거나, 추가 버튼 내에서 현재 등록된 개수/최대 개수를 나타내주는 방식으로 수정하면 좋을 것 같다고 생각했습니다. 
+
+또한 이미지를 등록하는 과정에서 추가한 이미지를 제거할 수 도 있어야 한다고 생각해서 제거 버튼을 구현해주었습니다. 이 부분은 `UIImageview`와 `UIButton`을 가지는 컨테이너 뷰를 만들어서 커스텀하게 구현해주었습니다. 
+
+## 학습 키워드
+
+- Image Resizing
+- 프로토콜 기본 구현 / 상속
+- Custom View 구현 
+- View와 ViewController 분리 
+- Keyboard 관리 
+- Delegate pattern
+- UIImagePickerController
+    - 사용자 사진첩 접근 권한 설정 
+- UISegmentedControl
+- ScrollView
+- Networking
+    - multipart/form
+    - URLSession
+    - HttpRequest, HttpResponse
+    - Request, Response Debugging
